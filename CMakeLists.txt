@@ -8,9 +8,6 @@ if(NOT TARGET ${RamRodGL_LIBRARIES})
     LANGUAGES CXX C
   )
 
-  # finding dependencies
-  find_package(OpenGL REQUIRED)
-
   #header files
   set(HPP_FILES
     include/ramrod/gl/buffer.h
@@ -28,7 +25,9 @@ if(NOT TARGET ${RamRodGL_LIBRARIES})
     src/ramrod/gl/frame_buffer.cpp
     src/ramrod/gl/render_buffer.cpp
     src/ramrod/gl/render_processor.cpp
+    src/ramrod/gl/shader.cpp
     src/ramrod/gl/texture.cpp
+    src/ramrod/gl/uniform_buffer.cpp
   )
 
   # ++++++++++++++++++++++++++++++++++++++ GLAD ++++++++++++++++++++++++++++++++++++++
@@ -51,16 +50,20 @@ if(NOT TARGET ${RamRodGL_LIBRARIES})
   set(${PROJECT_NAME}_LIBRARIES ${PROJECT_NAME} CACHE INTERNAL "")
 
   #add every file to the executable
-  add_library(${PROJECT_NAME}
-    ${GLAD_FILES}
-    ${HPP_FILES}
-    ${CPP_FILES}
-  )
+  add_library(${PROJECT_NAME})
 
   set_target_properties(${PROJECT_NAME} PROPERTIES
-    CXX_STANDARD 14
+    CXX_STANDARD 17
     CXX_STANDARD_REQUIRED TRUE
     CXX_EXTENSIONS FALSE
+  )
+
+  target_sources(${PROJECT_NAME}
+    PRIVATE
+      ${HPP_FILES}
+      ${CPP_FILES}
+    PUBLIC
+      ${GLAD_FILES}
   )
 
   target_include_directories(${PROJECT_NAME}
@@ -75,7 +78,7 @@ if(NOT TARGET ${RamRodGL_LIBRARIES})
 
   target_compile_features(${PROJECT_NAME}
     PRIVATE
-    cxx_std_14
+    cxx_std_17
   )
 
   target_compile_options(${PROJECT_NAME}
@@ -84,18 +87,21 @@ if(NOT TARGET ${RamRodGL_LIBRARIES})
       -Wextra
       -Wundef
       -pedantic
+      -Wconversion
       -Wcast-align
       -Wfloat-equal
       -Wpointer-arith
+      -Wsign-conversion
       -Wunreachable-code
-      -Wno-unused-function
-      -Wno-ignored-qualifiers
+      -Wunused-function
+      -Wignored-qualifiers
   )
 
-  #indicates which libraries to use in the executable
-  target_link_libraries(${PROJECT_NAME}
-    # OpenGL libraries
-    ${OPENGL_LIBRARIES}
+  set_source_files_properties(${GLAD_FILES}
+    PROPERTIES COMPILE_FLAGS
+      " -Wno-all -Wno-extra -Wno-undef -Wno-pedantic -Wno-conversion -Wno-cast-align"
+      " -Wno-float-equal -Wno-pointer-arith -Wno-sign-conversion -Wno-unreachable-code"
+      " -Wno-unused-function -Wno-ignored-qualifiers"
   )
 
 endif(NOT TARGET ${RamRodGL_LIBRARIES})
