@@ -1,19 +1,19 @@
-#ifndef TORERO_BUFFER_H
-#define TORERO_BUFFER_H
+#ifndef RAMROD_GL_BUFFER_H
+#define RAMROD_GL_BUFFER_H
 
 #include "glad/glad.h"
 
-namespace torero {
+namespace ramrod {
   namespace gl {
-    class Buffer
+    class buffer
     {
     public:
       // construct this Buffer object and creates a new GL_VERTEX_ARRAY if create is true
-      Buffer(const bool create = false);
+      buffer(const bool create = false);
       /*
      * Frees the memory of its GL_VERTEX_ARRAY, GL_ARRAY_BUFFER, and GL_ELEMENT_BUFFER
      */
-      ~Buffer();
+      ~buffer();
       /*
      * Creates a new GL_VERTEX_ARRAY if is not yet created, also, creates a new
      * GL_ARRAY_BUFFER if has not been created yet and allocates its buffered data.
@@ -64,12 +64,6 @@ namespace torero {
      */
       void buffer_release();
       /*
-     * Creates a new GL_VERTEX_ARRAY that could contain a GL_ARRAY_BUFFER and GL_ELEMENT_BUFFER
-     *
-     * @returns bool : false if vertex array was not generated
-     */
-      bool create();
-      /*
      * Deletes the vertex array and its buffers
      *
      * @returns bool : false if array and buffers were not generated
@@ -87,6 +81,14 @@ namespace torero {
      * Enables the vertex array's attribute with id = attribute_id
      */
       void enable(const GLuint attribute_id);
+      bool generate_array();
+      bool generate_element();
+      /*
+     * Creates a new GL_VERTEX_ARRAY that could contain a GL_ARRAY_BUFFER and GL_ELEMENT_BUFFER
+     *
+     * @returns bool : false if vertex array was not generated
+     */
+      bool generate_vertex();
       /*
      * Returns the ID of the buffer array
      *
@@ -122,7 +124,7 @@ namespace torero {
      *
      * @returns bool : false if vertex array was not generated
      */
-      bool vertex_bind();
+      void vertex_bind();
       /*
      * Releases this GL_VERTEX_ARRAY_OBJECT
      */
@@ -134,4 +136,4 @@ namespace torero {
   }
 }
 
-#endif // TORERO_BUFFER_H
+#endif // RAMROD_GL_BUFFER_H

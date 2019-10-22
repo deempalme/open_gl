@@ -1,27 +1,22 @@
-#ifndef TORERO_FRAME_BUFFER_H
-#define TORERO_FRAME_BUFFER_H
+#ifndef RAMROD_GL_FRAME_BUFFER_H
+#define RAMROD_GL_FRAME_BUFFER_H
 
 // OpenGL loader and core library
 #include "glad/glad.h"
 
-#include "torero/definition/types.h"
-
-#include <string>
-
-namespace torero {
+namespace ramrod {
   namespace gl {
-    class FrameBuffer
+    class frame_buffer
     {
     public:
-      FrameBuffer(const bool generate = false, const bool add_render_buffer = false);
-
-      ~FrameBuffer();
+      frame_buffer(const bool generate = false, const bool add_render_buffer = false);
+      ~frame_buffer();
       /*
      * Attaches a texture into the frame buffer
      *
      * @returns bool : false if frame buffer was not generated
      */
-      bool attach_2D(const GLint texture, const GLenum attachment = GL_COLOR_ATTACHMENT0,
+      bool attach_2D(const GLuint texture, const GLenum attachment = GL_COLOR_ATTACHMENT0,
                      const GLenum texture_target_type = GL_TEXTURE_2D, const GLint level = 0);
       /*
      * Attaches the render buffer to the frame buffer
@@ -34,17 +29,17 @@ namespace torero {
      *
      * @returns bool : false if frame buffer was not generated
      */
-      bool bind();
+      void bind();
       /*
      * Binds the render buffer
      *
      * @returns bool : false if render was not generated
      */
-      bool bind_render();
+      void bind_render();
       /*
      * Clears the frame buffer content
      */
-      void clear();
+      void clear(GLbitfield mask = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
       /*
      * Deletes the frame buffer and render buffer (if created)
      *
@@ -57,26 +52,20 @@ namespace torero {
      * @returns bool : false if render buffer does not exist
      */
       bool delete_render();
-      /*
-     * Returns the explanation to any error when generating the frame buffer
-     *
-     * @returns const std::string& : Error description
-     *
-     */
-      const std::string &error_log();
+      bool draw_buffer();
       /*
      * Returns the frame attachment point
      *
      * @returns const GLenum& : for more info see
      *    https://khronos.org/registry/OpenGL-Refpages/gl4/html/glFramebufferTexture.xhtml
      */
-      const GLenum &frame_attachment();
+      GLenum frame_attachment();
       /*
      * Returns the frame buffer id
      *
      * @returns const GLuint& : Returns the frame buffer ID
      */
-      const GLuint &frame_id();
+      GLuint frame_id();
       /*
      * Generates a render buffer
      *
@@ -95,45 +84,47 @@ namespace torero {
      * @returns bool : false if frame buffer is not created yet
      */
       bool is_created();
+      bool read_buffer();
       /*
      * Reads a pixel from the frame buffer
      *
      * @returns bool : false if frame buffer is not created yet
      */
       bool read_pixel(GLvoid *data, const GLint x, const GLint y,
+                      const GLsizei width = 1, const GLsizei height = 1,
                       const GLenum type = GL_UNSIGNED_BYTE, const GLenum components = GL_RGBA);
       /*
      * Releases the actual frame buffer
      *
      * @returns bool : false if frame buffer is not created yet
      */
-      bool release();
+      void release();
       /*
      * Releases the render buffer
      *
      * @returns bool : false if render buffer is not created yet
      */
-      bool release_render();
+      void release_render();
       /*
      * Returns the Render attachment type
      *
      * @returns const GLenum : For more info see
      *    https://khronos.org/registry/OpenGL-Refpages/gl4/html/glFramebufferRenderbuffer.xhtml
      */
-      const GLenum &render_attachment();
+      GLenum render_attachment();
       /*
      * Returns Render Buffer internal format
      *
      * @returns const GLenum : For more info see
      *    https://khronos.org/registry/OpenGL-Refpages/gl4/html/glFramebufferRenderbuffer.xhtml
      */
-      const GLenum &render_format();
+      GLenum render_format();
       /*
      * Returns Render Buffer ID
      *
      * @returns const GLuint : render buffer id
      */
-      const GLuint &render_id();
+      GLuint render_id();
       /*
      * Defines Render Buffer properties
      *
@@ -148,12 +139,12 @@ namespace torero {
      *    https://khronos.org/registry/OpenGL-Refpages/gl4/html/glCheckFramebufferStatus.xhtml
      */
       GLenum status();
+      const char *status_msg();
 
     private:
       GLuint frame_id_, render_id_;
       GLenum frame_attachment_, render_attachment_, render_format_;
-      std::string error_log_;
     };
   }
 }
-#endif // TORERO_FRAME_BUFFER_H
+#endif // RAMROD_GL_FRAME_BUFFER_H

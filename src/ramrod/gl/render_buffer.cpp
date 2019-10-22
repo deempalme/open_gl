@@ -1,66 +1,59 @@
-#include "torero/gl/render_buffer.h"
+#include "ramrod/gl/render_buffer.h"
 
-namespace torero {
+namespace ramrod {
   namespace gl {
-    RenderBuffer::RenderBuffer(const bool create) :
-      id_(0),
-      is_created_(false),
-      error_log_("Frame buffer not created yet")
+    render_buffer::render_buffer(const bool create) :
+      id_(0)
     {
-      if(create){
-        this->create();
-        release();
-      }
+      if(create)
+        generate();
     }
 
-    RenderBuffer::~RenderBuffer(){
-      if(is_created_)
+    render_buffer::~render_buffer(){
+      if(id_ > 0)
         glDeleteRenderbuffers(1, &id_);
     }
 
-    void RenderBuffer::attach_to_framebuffer(const GLenum internal_format){
+    void render_buffer::attach_render_to_framebuffer(const GLenum internal_format){
       glFramebufferRenderbuffer(GL_FRAMEBUFFER, internal_format, GL_RENDERBUFFER, id_);
     }
 
-    bool RenderBuffer::bind(){
+    void render_buffer::bind(){
       glBindRenderbuffer(GL_RENDERBUFFER, id_);
-      return is_created_;
     }
 
-    bool RenderBuffer::create(){
-      error_log_.clear();
-      if(!is_created_){
+    bool render_buffer::delete_buffer(){
+      if(id_ == 0) return false;
+      glDeleteRenderbuffers(1, &id_);
+      id_ = 0;
+      return true;
+    }
 
+    bool render_buffer::generate(){
+      if(id_ == 0){
         glGenRenderbuffers(1, &id_);
-        glBindRenderbuffer(GL_RENDERBUFFER, id_);
-
-        is_created_ = true;
-        return true;
+        return id_ > 0;
       }else{
-        if(is_created_)
-          error_log_ += "RenderBuffer already created...\n----------\n";
         return false;
       }
     }
 
-    const std::string RenderBuffer::error_log(){
-      return error_log_;
-    }
-
-    const GLuint RenderBuffer::id(){
+    GLuint render_buffer::id(){
       return id_;
     }
 
-    bool RenderBuffer::is_created(){
-      return is_created_;
+    bool render_buffer::is_created(){
+      return id_ > 0;
     }
 
-    void RenderBuffer::release(){
+    void render_buffer::release(){
       glBindRenderbuffer(GL_RENDERBUFFER, 0);
     }
 
-    void RenderBuffer::storage(const GLsizei width, const GLsizei height, const GLenum format){
+    bool render_buffer::storage(const GLsizei width, const GLsizei height, const GLenum format){
+      if(id_ == 0) return false;
       glRenderbufferStorage(GL_RENDERBUFFER, format, width, height);
+      return true;
     }
   }
 }

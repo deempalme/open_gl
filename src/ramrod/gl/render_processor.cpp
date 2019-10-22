@@ -1,17 +1,17 @@
-#include "torero/gl/render_processor.h"
+#include "ramrod/gl/render_processor.h"
 
-namespace torero {
+namespace ramrod {
   namespace gl {
-    RenderProcessor::RenderProcessor()
+    render_processor::render_processor()
     {
 
     }
 
-    RenderProcessor::~RenderProcessor(){
+    render_processor::~render_processor(){
 
     }
 
-    void RenderProcessor::initialize_render(){
+    void render_processor::initialize_render(){
 
     }
   }

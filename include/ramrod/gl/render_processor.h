@@ -1,16 +1,16 @@
-#ifndef TORERO_RENDER_PROCESSOR_H
-#define TORERO_RENDER_PROCESSOR_H
+#ifndef RAMROD_GL_RENDER_PROCESSOR_H
+#define RAMROD_GL_RENDER_PROCESSOR_H
 
 // OpenGL loader and SDL2 library
 #include "glad/glad.h"
 
-namespace torero {
+namespace ramrod {
   namespace gl {
-    class RenderProcessor
+    class render_processor
     {
     public:
-      RenderProcessor();
-      ~RenderProcessor();
+      render_processor();
+      ~render_processor();
 
     protected:
       void initialize_render();
@@ -21,4 +21,4 @@ namespace torero {
     };
   }
 }
-#endif // TORERO_RENDER_PROCESSOR_H
+#endif // RAMROD_GL_RENDER_PROCESSOR_H
