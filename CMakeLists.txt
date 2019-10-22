@@ -53,9 +53,9 @@ if(NOT TARGET ${RamRodGL_LIBRARIES})
   add_library(${PROJECT_NAME})
 
   set_target_properties(${PROJECT_NAME} PROPERTIES
-    CXX_STANDARD 17
+    CXX_STANDARD          17
     CXX_STANDARD_REQUIRED TRUE
-    CXX_EXTENSIONS FALSE
+    CXX_EXTENSIONS        FALSE
   )
 
   target_sources(${PROJECT_NAME}
