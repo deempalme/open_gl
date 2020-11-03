@@ -26,6 +26,12 @@ namespace ramrod{
       bool allocate(const GLsizei width, const GLsizei height, const void *texture_data,
                     const int component_size);
 
+      bool allocate_sub_2d(const GLsizei width, const GLsizei height,
+                           const void *texture_data = nullptr,
+                           const GLint x_offset = 0, const GLint y_offset = 0,
+                           const GLenum format = GL_RGBA,
+                           const GLenum type = GL_UNSIGNED_BYTE, const GLint level = 0);
+
       void bind();
 
       bool delete_texture();
@@ -39,6 +45,10 @@ namespace ramrod{
                      const GLint mag_filter = GL_LINEAR);
       bool parameter(const GLenum parameter_name, const GLint value);
       bool parameter(const GLenum parameter_name, const GLfloat value);
+
+      bool pixel_store_f(GLenum name, GLfloat param);
+      bool pixel_store_i(GLenum name, GLint param);
+
       // returns the texture id
       GLuint id();
 
@@ -49,6 +59,8 @@ namespace ramrod{
 
       bool mipmap();
       void mipmap(const bool generate_mipmap);
+
+      void release();
 
       GLenum texture_target();
       void texture_target(const GLenum new_texture_target);

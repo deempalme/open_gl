@@ -75,18 +75,20 @@ namespace ramrod {
       return true;
     }
 
+    void frame_buffer::draw_buffer(const GLenum buffer){
+      glDrawBuffer(buffer);
+    }
+
+    void frame_buffer::draw_buffers(const GLsizei number_of_buffers, const GLenum *buffers){
+      glDrawBuffers(number_of_buffers, buffers);
+    }
+
     GLenum frame_buffer::frame_attachment(){
       return frame_attachment_;
     }
 
     GLuint frame_buffer::frame_id(){
       return frame_id_;
-    }
-
-    bool frame_buffer::generate_render(){
-      if(render_id_ > 0) return false;
-      glGenRenderbuffers(1, &render_id_);
-      return render_id_ > 0;
     }
 
     bool frame_buffer::generate_frame(const bool generate_render_buffer){
@@ -99,6 +101,12 @@ namespace ramrod {
         return true;
       }
       return false;
+    }
+
+    bool frame_buffer::generate_render(){
+      if(render_id_ > 0) return false;
+      glGenRenderbuffers(1, &render_id_);
+      return render_id_ > 0;
     }
 
     bool frame_buffer::is_created(){

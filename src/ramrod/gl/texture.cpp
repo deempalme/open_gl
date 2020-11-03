@@ -75,6 +75,16 @@ namespace ramrod{
       return true;
     }
 
+    bool texture::allocate_sub_2d(const GLsizei width, const GLsizei height,
+                                  const void *texture_data, const GLint x_offset,
+                                  const GLint y_offset, const GLenum format,
+                                  const GLenum type, const GLint level){
+      if(id_ == 0) return false;
+      glTexSubImage2D(GL_TEXTURE_2D, level, x_offset, y_offset, width, height,
+                      format, type, texture_data);
+      return true;
+    }
+
     void texture::bind(){
       glBindTexture(texture_target_, id_);
     }
@@ -136,6 +146,18 @@ namespace ramrod{
       return true;
     }
 
+    bool texture::pixel_store_f(GLenum name, GLfloat param){
+      if(id_ == 0) return false;
+      glPixelStoref(name, param);
+      return true;
+    }
+
+    bool texture::pixel_store_i(GLenum name, GLint param){
+      if(id_ == 0) return false;
+      glPixelStorei(name, param);
+      return true;
+    }
+
     GLuint texture::id(){
       return id_;
     }
@@ -160,6 +182,10 @@ namespace ramrod{
 
     void texture::mipmap(const bool generate_mipmap){
       has_mipmap_ = generate_mipmap;
+    }
+
+    void texture::release(){
+      glBindTexture(texture_target_, 0);
     }
 
     GLenum texture::texture_target(){
