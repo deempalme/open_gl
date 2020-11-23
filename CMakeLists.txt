@@ -8,6 +8,9 @@ if(NOT TARGET ${RamRodGL_LIBRARIES})
     LANGUAGES CXX C
   )
 
+  # finding dependencies
+  find_package(OpenGL REQUIRED)
+
   # ++++++++++++++++++++++++++++++++++++++ GLAD ++++++++++++++++++++++++++++++++++++++
   # adding the root directory of the GLAD source tree to your project
   set(GLAD_FILES lib/GLAD/src/glad.c)
@@ -51,6 +54,12 @@ if(NOT TARGET ${RamRodGL_LIBRARIES})
     BEFORE PRIVATE
     include
     lib/GLAD/include
+  )
+
+  #indicates which libraries to use in the executable
+  target_link_libraries(${PROJECT_NAME}
+    # OpenGL libraries
+    ${OPENGL_LIBRARIES}
   )
 
   target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)

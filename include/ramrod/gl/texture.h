@@ -10,7 +10,7 @@ namespace ramrod{
     {
     public:
       texture(const bool create = false,
-              const GLuint active_texture = GL_TEXTURE0,
+              const GLuint active_texture = 0,
               const GLenum texture_target = GL_TEXTURE_2D);
       ~texture();
       // returns the program texture unit
