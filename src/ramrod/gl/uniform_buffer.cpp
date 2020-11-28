@@ -22,9 +22,9 @@ namespace ramrod {
     }
 
     bool uniform_buffer::allocate_section(const GLvoid *data, const GLsizeiptr size_in_bytes,
-                                          const GLintptr offset_in_bytes){
+                                          const GLintptr offset){
       if(buffer_ > 0) return false;
-      glBufferSubData(GL_UNIFORM_BUFFER, offset_in_bytes, size_in_bytes, data);
+      glBufferSubData(GL_UNIFORM_BUFFER, offset, size_in_bytes, data);
       return true;
     }
 
@@ -36,9 +36,9 @@ namespace ramrod {
       glBindBufferBase(GL_UNIFORM_BUFFER, index, buffer_);
     }
 
-    void uniform_buffer::bind_range(const GLuint index, const GLintptr offset_in_bytes,
+    void uniform_buffer::bind_range(const GLuint index, const GLintptr offset,
                                     const GLsizeiptr size_in_bytes){
-      glBindBufferRange(GL_UNIFORM_BUFFER, index, buffer_, offset_in_bytes, size_in_bytes);
+      glBindBufferRange(GL_UNIFORM_BUFFER, index, buffer_, offset, size_in_bytes);
     }
 
     bool uniform_buffer::delete_buffer(){
@@ -55,13 +55,6 @@ namespace ramrod {
 
     void uniform_buffer::release(){
       glBindBuffer(GL_UNIFORM_BUFFER, 0);
-    }
-
-    bool uniform_buffer::range(const GLsizeiptr size_in_bytes, const GLuint index,
-                               const GLintptr offset_in_bytes){
-      if(buffer_ > 0) return false;
-      glBindBufferRange(GL_UNIFORM_BUFFER, index, buffer_, offset_in_bytes, size_in_bytes);
-      return true;
     }
 
     GLint uniform_buffer::size(){

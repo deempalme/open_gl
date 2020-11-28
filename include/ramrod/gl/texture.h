@@ -11,6 +11,7 @@ namespace ramrod{
     public:
       texture(const bool create = false,
               const GLuint active_texture = 0,
+              const bool has_mipmap = true,
               const GLenum texture_target = GL_TEXTURE_2D);
       ~texture();
       // returns the program texture unit

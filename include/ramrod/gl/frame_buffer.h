@@ -83,6 +83,18 @@ namespace ramrod {
        */
       GLuint frame_id();
       /**
+       * @brief Calling glFinish()
+       *
+       * Block until all GL execution is complete
+       */
+      void finish();
+      /**
+       * @brief Calling glFlush()
+       *
+       * Force execution of GL commands in finite time
+       */
+      void flush();
+      /**
        * @brief Generates a frame buffer and optionally a render buffer too
        * @return false if frame buffer was already created
        */
@@ -98,7 +110,10 @@ namespace ramrod {
        */
       bool is_created();
       /**
-       * @brief Read this framebuffer
+       * @brief Select a color buffer source for pixels
+       *
+       * Specifies a color buffer as the source for subsequent `read_pixel`
+       *
        * @return false if frame buffer is not created yet
        */
       bool read_buffer();

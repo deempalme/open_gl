@@ -2,6 +2,12 @@
 #define RAMROD_GL_CONSTANTS_H
 
 namespace ramrod {
+  namespace gl {
+    constexpr int size_unsigned_byte  = sizeof(unsigned char);
+    constexpr int size_unsigned_short = sizeof(unsigned short);
+    constexpr int size_unsigned_int   = sizeof(unsigned int);
+  } // namespace: gl
+
   constexpr char GL_FRAMEBUFFER_UNDEFINED_error[] =
       "The specified framebuffer is the default read or draw framebuffer, "
       "but the default framebuffer does not exist.\0";
@@ -37,6 +43,6 @@ namespace ramrod {
       "textures of the same target.\0";
   constexpr char GL_UNKNOWN_error[] = "Unknown error.\0";
   constexpr char GL_FRAMEBUFFER_COMPLETE_ok[] = "Framebuffer is complete\0";
-}
+} // namespace: ramrod
 
 #endif // RAMROD_GL_CONSTANTS_H

@@ -91,6 +91,14 @@ namespace ramrod {
       return frame_id_;
     }
 
+    void frame_buffer::finish(){
+      glFinish();
+    }
+
+    void frame_buffer::flush(){
+      glFlush();
+    }
+
     bool frame_buffer::generate_frame(const bool generate_render_buffer){
       if(frame_id_ == 0){
         glGenFramebuffers(1, &frame_id_);
