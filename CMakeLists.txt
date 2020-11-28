@@ -64,27 +64,4 @@ if(NOT TARGET ${RamRodGL_LIBRARIES})
 
   target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
-  target_compile_options(${PROJECT_NAME}
-    PRIVATE
-      -Wall
-      -Wextra
-      -Wundef
-      -pedantic
-      -Wconversion
-      -Wcast-align
-      -Wfloat-equal
-      -Wpointer-arith
-      -Wsign-conversion
-      -Wunreachable-code
-      -Wunused-function
-      -Wignored-qualifiers
-  )
-
-  set_source_files_properties(${GLAD_FILES}
-    PROPERTIES COMPILE_FLAGS
-      " -Wno-all -Wno-extra -Wno-undef -Wno-pedantic -Wno-conversion -Wno-cast-align"
-      " -Wno-float-equal -Wno-pointer-arith -Wno-sign-conversion -Wno-unreachable-code"
-      " -Wno-unused-function -Wno-ignored-qualifiers"
-  )
-
 endif(NOT TARGET ${RamRodGL_LIBRARIES})
