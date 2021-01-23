@@ -72,6 +72,26 @@ namespace ramrod {
       void bind_range(const GLuint index, const GLintptr offset,
                       const GLsizeiptr size_in_bytes);
       /**
+       * @brief Getting the binding index of the uniform block
+       *
+       * @param shader_id Specifies the name of a program containing the uniform block.
+       * @param uniform_index Specifies the index of the uniform block within program.
+       *
+       * @return The index of the uniform buffer binding point last selected by the uniform
+       *         block specified by `uniform_index` for program is returned. If no uniform
+       *         block has been previously specified, zero is returned.
+       */
+      GLint block_binding(const GLuint shader_id, const GLuint uniform_index) const;
+      /**
+       * @brief Getting the size of the uniform block's data in bytes
+       *
+       * @param shader_id Specifies the name of a program containing the uniform block.
+       * @param uniform_index Specifies the index of the uniform block within program.
+       *
+       * @return Size in bytes of the uniform block's data or -1 if error happened
+       */
+      GLint block_size(const GLuint shader_id, const GLuint uniform_index) const;
+      /**
        * @brief Deletes this `GL_UNIFORM_BUFFER`
        */
       bool delete_buffer();
@@ -81,6 +101,12 @@ namespace ramrod {
        * @return `false` if it was not possible to generate the uniform buffer
        */
       bool generate();
+      /**
+       * @brief Getting this uniform block's id
+       *
+       * @return Id of this uniform block or 0 if it not yet generated
+       */
+      GLuint id() const;
       /**
        * @brief Releases this buffer's `GL_UNIFORM_BUFFER`
        */
@@ -92,10 +118,10 @@ namespace ramrod {
        *
        * @returns Size in bytes of `GL_UNIFORM_BUFFER`
        */
-      GLint size();
+      GLint size() const;
 
     private:
-      GLuint buffer_;
+      GLuint id_;
     };
   }
 }

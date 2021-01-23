@@ -74,6 +74,59 @@ namespace ramrod {
       bool operator()(const std::string &vertex_path,
                       const std::string &fragment_path,
                       const std::string &geometry_path = "");
+      /**
+       * @brief Releasing all the shaders
+       */
+      void release() const;
+      /**
+       * @brief Getting the binding index of the uniform block
+       *
+       * @param uniform_name Specifies the address an array of characters to containing the
+       *                     name of the uniform block whose index to retrieve.
+       *
+       * @return The index of the uniform buffer binding point last selected by the uniform
+       *         block specified by `uniform_index` for program is returned. If no uniform
+       *         block has been previously specified, zero is returned or -1 if there was
+       *         and error.
+       */
+      GLint uniform_block_binding(const std::string &uniform_name) const;
+      /**
+       * @brief Getting the binding index of the uniform block
+       *
+       * @param uniform_index Specifies the index of the uniform block within program.
+       *
+       * @return The index of the uniform buffer binding point last selected by the uniform
+       *         block specified by `uniform_index` for program is returned. If no uniform
+       *         block has been previously specified, zero is returned or -1 if there was
+       *         and error.
+       */
+      GLint uniform_block_binding(const GLuint uniform_index) const;
+      /**
+       * @brief Retrieve the index of a named uniform block
+       *
+       * @param uniform_name Specifies the address an array of characters to containing the
+       *                     nameof the uniform block whose index to retrieve.
+       *
+       * @return Uniform block's index or `GL_INVALID_INDEX` if does not exist
+       */
+      GLuint uniform_block_index(const std::string &uniform_name) const;
+      /**
+       * @brief Getting the size of the uniform block's data in bytes
+       *
+       * @param uniform_name Specifies the address an array of characters to containing
+       *                     the name of the uniform block whose index to retrieve.
+       *
+       * @return Size in bytes of the uniform block's data or -1 if error happened
+       */
+      GLint uniform_block_data_size(const std::string &uniform_name) const;
+      /**
+       * @brief Getting the size of the uniform block's data in bytes
+       *
+       * @param uniform_index Specifies the index of the uniform block within program.
+       *
+       * @return Size in bytes of the uniform block's data or -1 if error happened
+       */
+      GLint uniform_block_data_size(const GLuint uniform_index) const;
       /*
      * Getting the uniform location
      *

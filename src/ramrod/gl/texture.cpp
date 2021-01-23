@@ -40,10 +40,9 @@ namespace ramrod{
 
     bool texture::allocate(const GLsizei width, const GLsizei height, const void *texture_data,
                            const GLenum data_format, const GLenum data_type,
-                           const GLint internal_format, const GLenum target,
-                           const GLint level){
+                           const GLint internal_format, const GLint level){
       if(id_ == 0) return false;
-      glTexImage2D(target, level, internal_format_ = internal_format, width, height,
+      glTexImage2D(texture_target_, level, internal_format_ = internal_format, width, height,
                    0, data_format, data_type_ = data_type, texture_data);
       return true;
     }
@@ -71,7 +70,7 @@ namespace ramrod{
         default:
         break;
       }
-      glTexImage2D(GL_TEXTURE_2D, 0, internal_format_ = internal_format, width, height,
+      glTexImage2D(texture_target_, 0, internal_format_ = internal_format, width, height,
                    0, data_format, data_type_ = GL_UNSIGNED_BYTE, texture_data);
       return true;
     }
@@ -81,7 +80,7 @@ namespace ramrod{
                                   const GLint y_offset, const GLenum format,
                                   const GLenum type, const GLint level){
       if(id_ == 0) return false;
-      glTexSubImage2D(GL_TEXTURE_2D, level, x_offset, y_offset, width, height,
+      glTexSubImage2D(texture_target_, level, x_offset, y_offset, width, height,
                       format, type, texture_data);
       return true;
     }

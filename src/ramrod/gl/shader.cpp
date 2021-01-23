@@ -208,6 +208,40 @@ namespace ramrod {
       return create(vertex_path, fragment_path, geometry_path);
     }
 
+    void shader::release() const {
+      glUseProgram(0);
+    }
+
+    GLint shader::uniform_block_binding(const std::string &uniform_name) const {
+      GLint binding = -1;
+      glGetActiveUniformBlockiv(id_, uniform_block_index(uniform_name),
+                                GL_UNIFORM_BLOCK_BINDING, &binding);
+      return binding;
+    }
+
+    GLint shader::uniform_block_binding(const GLuint uniform_index) const {
+      GLint binding = -1;
+      glGetActiveUniformBlockiv(id_, uniform_index, GL_UNIFORM_BLOCK_BINDING, &binding);
+      return binding;
+    }
+
+    GLuint shader::uniform_block_index(const std::string &uniform_name) const {
+      return glGetUniformBlockIndex(id_, uniform_name.c_str());
+    }
+
+    GLint shader::uniform_block_data_size(const std::string &uniform_name) const {
+      GLint size = -1;
+      glGetActiveUniformBlockiv(id_, uniform_block_index(uniform_name),
+                                GL_UNIFORM_BLOCK_DATA_SIZE, &size);
+      return size;
+    }
+
+    GLint shader::uniform_block_data_size(const GLuint uniform_index) const {
+      GLint size = -1;
+      glGetActiveUniformBlockiv(id_, uniform_index, GL_UNIFORM_BLOCK_DATA_SIZE, &size);
+      return size;
+    }
+
     GLint shader::uniform_location(const std::string &name) const{
       return glGetUniformLocation(id_, name.c_str());
     }
