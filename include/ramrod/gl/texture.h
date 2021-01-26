@@ -11,6 +11,7 @@ namespace ramrod{
     public:
       texture(const bool create = false,
               const GLuint active_texture = 0,
+              const bool has_mipmap = true,
               const GLenum texture_target = GL_TEXTURE_2D);
       ~texture();
       // returns the program texture unit
@@ -21,8 +22,7 @@ namespace ramrod{
 
       bool allocate(const GLsizei width, const GLsizei height, const void *texture_data = nullptr,
                     const GLenum data_format = GL_RGBA, const GLenum data_type = GL_UNSIGNED_BYTE,
-                    const GLint internal_format = GL_RGBA8, const GLenum target = GL_TEXTURE_2D,
-                    const GLint level = 0);
+                    const GLint internal_format = GL_RGBA8, const GLint level = 0);
       bool allocate(const GLsizei width, const GLsizei height, const void *texture_data,
                     const int component_size);
 

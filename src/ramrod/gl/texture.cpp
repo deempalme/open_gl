@@ -2,14 +2,15 @@
 
 namespace ramrod{
   namespace gl {
-    texture::texture(const bool create, const GLuint active_texture, const GLenum texture_target) :
+    texture::texture(const bool create, const GLuint active_texture,
+                     const bool has_mipmap, const GLenum texture_target) :
       id_(0),
       active_texture_(active_texture),
       data_type_(GL_UNSIGNED_BYTE),
       texture_target_(texture_target),
       internal_format_(GL_RGBA8),
       max_filtering_(8.0f),
-      has_mipmap_(true),
+      has_mipmap_(has_mipmap),
       custom_filtering_(false)
     {
       if(create)
@@ -39,10 +40,9 @@ namespace ramrod{
 
     bool texture::allocate(const GLsizei width, const GLsizei height, const void *texture_data,
                            const GLenum data_format, const GLenum data_type,
-                           const GLint internal_format, const GLenum target,
-                           const GLint level){
+                           const GLint internal_format, const GLint level){
       if(id_ == 0) return false;
-      glTexImage2D(target, level, internal_format_ = internal_format, width, height,
+      glTexImage2D(texture_target_, level, internal_format_ = internal_format, width, height,
                    0, data_format, data_type_ = data_type, texture_data);
       return true;
     }
@@ -70,7 +70,7 @@ namespace ramrod{
         default:
         break;
       }
-      glTexImage2D(GL_TEXTURE_2D, 0, internal_format_ = internal_format, width, height,
+      glTexImage2D(texture_target_, 0, internal_format_ = internal_format, width, height,
                    0, data_format, data_type_ = GL_UNSIGNED_BYTE, texture_data);
       return true;
     }
@@ -80,7 +80,7 @@ namespace ramrod{
                                   const GLint y_offset, const GLenum format,
                                   const GLenum type, const GLint level){
       if(id_ == 0) return false;
-      glTexSubImage2D(GL_TEXTURE_2D, level, x_offset, y_offset, width, height,
+      glTexSubImage2D(texture_target_, level, x_offset, y_offset, width, height,
                       format, type, texture_data);
       return true;
     }
@@ -114,13 +114,14 @@ namespace ramrod{
                             const GLint min_filter, const GLint mag_filter){
       if(id_ == 0) return false;
 
+      // set the texture wrapping parameters
+      glTexParameteri(texture_target_, GL_TEXTURE_WRAP_S, wrap_s);
+      glTexParameteri(texture_target_, GL_TEXTURE_WRAP_T, wrap_t);
+      // set texture filtering parameters
+      glTexParameteri(texture_target_, GL_TEXTURE_MIN_FILTER, min_filter);
+      glTexParameteri(texture_target_, GL_TEXTURE_MAG_FILTER, mag_filter);
+
       if(has_mipmap_){
-        // set the texture wrapping parameters
-        glTexParameteri(texture_target_, GL_TEXTURE_WRAP_S, wrap_s);
-        glTexParameteri(texture_target_, GL_TEXTURE_WRAP_T, wrap_t);
-        // set texture filtering parameters
-        glTexParameteri(texture_target_, GL_TEXTURE_MIN_FILTER, min_filter);
-        glTexParameteri(texture_target_, GL_TEXTURE_MAG_FILTER, mag_filter);
         // Set anisotropic filter
         if(custom_filtering_)
           glTexParameterf(texture_target_, GL_TEXTURE_MAX_ANISOTROPY_EXT, max_filtering_);
@@ -128,9 +129,6 @@ namespace ramrod{
           glTexParameterf(texture_target_, GL_TEXTURE_MAX_ANISOTROPY_EXT, global_max_filtering_);
         // Generates mipmap
         glGenerateMipmap(texture_target_);
-      }else{
-        glTexParameteri(texture_target_, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(texture_target_, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
       }
       return true;
     }

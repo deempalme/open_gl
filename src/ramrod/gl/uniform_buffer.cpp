@@ -3,71 +3,80 @@
 namespace ramrod {
   namespace gl {
     uniform_buffer::uniform_buffer(const bool create):
-      buffer_(0)
+      id_(0)
     {
       if(create)
         generate();
     }
 
     uniform_buffer::~uniform_buffer(){
-      if(buffer_ > 0)
-        glDeleteBuffers(1, &buffer_);
+      if(id_ > 0)
+        glDeleteBuffers(1, &id_);
     }
 
     bool uniform_buffer::allocate(const GLvoid *data, const GLsizei size_in_bytes,
                                   const GLenum ussage){
-      if(buffer_ > 0) return false;
+      if(id_ > 0) return false;
       glBufferData(GL_UNIFORM_BUFFER, size_in_bytes, data, ussage);
       return true;
     }
 
     bool uniform_buffer::allocate_section(const GLvoid *data, const GLsizeiptr size_in_bytes,
-                                          const GLintptr offset_in_bytes){
-      if(buffer_ > 0) return false;
-      glBufferSubData(GL_UNIFORM_BUFFER, offset_in_bytes, size_in_bytes, data);
+                                          const GLintptr offset){
+      if(id_ > 0) return false;
+      glBufferSubData(GL_UNIFORM_BUFFER, offset, size_in_bytes, data);
       return true;
     }
 
     void uniform_buffer::bind(){
-      glBindBuffer(GL_UNIFORM_BUFFER, buffer_);
+      glBindBuffer(GL_UNIFORM_BUFFER, id_);
     }
 
     void uniform_buffer::bind_base(const GLuint index){
-      glBindBufferBase(GL_UNIFORM_BUFFER, index, buffer_);
+      glBindBufferBase(GL_UNIFORM_BUFFER, index, id_);
     }
 
-    void uniform_buffer::bind_range(const GLuint index, const GLintptr offset_in_bytes,
+    void uniform_buffer::bind_range(const GLuint index, const GLintptr offset,
                                     const GLsizeiptr size_in_bytes){
-      glBindBufferRange(GL_UNIFORM_BUFFER, index, buffer_, offset_in_bytes, size_in_bytes);
+      glBindBufferRange(GL_UNIFORM_BUFFER, index, id_, offset, size_in_bytes);
+    }
+
+    GLint uniform_buffer::block_binding(const GLuint shader_id, const GLuint uniform_index) const {
+      GLint binding = -1;
+      glGetActiveUniformBlockiv(shader_id, uniform_index, GL_UNIFORM_BLOCK_BINDING, &binding);
+      return binding;
+    }
+
+    GLint uniform_buffer::block_size(const GLuint shader_id, const GLuint uniform_index) const {
+      GLint size = -1;
+      glGetActiveUniformBlockiv(shader_id, uniform_index, GL_UNIFORM_BLOCK_DATA_SIZE, &size);
+      return size;
     }
 
     bool uniform_buffer::delete_buffer(){
-      if(buffer_ == 0) return false;
-      glDeleteBuffers(1, &buffer_);
+      if(id_ == 0) return false;
+      glDeleteBuffers(1, &id_);
       return true;
     }
 
     bool uniform_buffer::generate(){
-      if(buffer_ > 0) return false;
-      glGenBuffers(1, &buffer_);
+      if(id_ > 0) return false;
+      glGenBuffers(1, &id_);
       return true;
+    }
+
+    GLuint uniform_buffer::id() const {
+      return id_;
     }
 
     void uniform_buffer::release(){
       glBindBuffer(GL_UNIFORM_BUFFER, 0);
     }
 
-    bool uniform_buffer::range(const GLsizeiptr size_in_bytes, const GLuint index,
-                               const GLintptr offset_in_bytes){
-      if(buffer_ > 0) return false;
-      glBindBufferRange(GL_UNIFORM_BUFFER, index, buffer_, offset_in_bytes, size_in_bytes);
-      return true;
-    }
-
-    GLint uniform_buffer::size(){
+    GLint uniform_buffer::size() const{
       GLint size{0};
-      if(buffer_ > 0){
-        glBindBuffer(GL_UNIFORM_BUFFER, buffer_);
+      if(id_ > 0){
+        glBindBuffer(GL_UNIFORM_BUFFER, id_);
         glGetBufferParameteriv(GL_UNIFORM_BUFFER, GL_BUFFER_SIZE, &size);
       }
       return size;

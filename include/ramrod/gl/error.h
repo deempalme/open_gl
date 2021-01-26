@@ -33,6 +33,16 @@ namespace ramrod {
        * @return String containing the full error's information or empty if there is no error
        */
       static std::string message();
+      /**
+       * @brief Getting error's description
+       *
+       * Obtains the full description and name of the `error_code` value.
+       *
+       * @param error_code The error code obtained from `code()` or `glGetError()`
+       *
+       * @return String containing the full error's information or empty if there is no error
+       */
+      static std::string message(const GLenum error_code);
 
     private:
     };
