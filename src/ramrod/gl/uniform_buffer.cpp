@@ -16,14 +16,14 @@ namespace ramrod {
 
     bool uniform_buffer::allocate(const GLvoid *data, const GLsizei size_in_bytes,
                                   const GLenum ussage){
-      if(id_ > 0) return false;
+      if(id_ == 0) return false;
       glBufferData(GL_UNIFORM_BUFFER, size_in_bytes, data, ussage);
       return true;
     }
 
     bool uniform_buffer::allocate_section(const GLvoid *data, const GLsizeiptr size_in_bytes,
                                           const GLintptr offset){
-      if(id_ > 0) return false;
+      if(id_ == 0) return false;
       glBufferSubData(GL_UNIFORM_BUFFER, offset, size_in_bytes, data);
       return true;
     }
@@ -56,6 +56,7 @@ namespace ramrod {
     bool uniform_buffer::delete_buffer(){
       if(id_ == 0) return false;
       glDeleteBuffers(1, &id_);
+      id_ = 0;
       return true;
     }
 
