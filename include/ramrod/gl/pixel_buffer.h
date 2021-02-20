@@ -3,13 +3,15 @@
 
 // OpenGL loader and core library
 #include "glad/glad.h"
+#include "ramrod/gl/enumerators.h"
 
 namespace ramrod {
   namespace gl {
     class pixel_buffer
     {
     public:
-      pixel_buffer(const bool generate = false);
+      pixel_buffer(const bool generate = false,
+                   const pixel::buffer type = pixel::buffer::pack);
       ~pixel_buffer();
       /**
        * @brief Creates and initializes a buffer object's data store
@@ -115,6 +117,7 @@ namespace ramrod {
 
     private:
       GLuint buffer_id_;
+      GLenum buffer_type_;
     };
   }
 }

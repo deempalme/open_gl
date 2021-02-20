@@ -2,8 +2,9 @@
 
 namespace ramrod {
   namespace gl {
-    pixel_buffer::pixel_buffer(const bool generate) :
-      buffer_id_{0}
+    pixel_buffer::pixel_buffer(const bool generate, const pixel::buffer type) :
+      buffer_id_{0},
+      buffer_type_(type == pixel::buffer::pack ? GL_PIXEL_PACK_BUFFER : GL_PIXEL_UNPACK_BUFFER)
     {
       if(generate)
         this->generate();
@@ -17,13 +18,13 @@ namespace ramrod {
     bool pixel_buffer::allocate_data(const GLvoid *data, const GLsizei size_in_bytes,
                                      const GLenum usage){
       if(buffer_id_ == 0) return false;
-      glBufferData(GL_PIXEL_PACK_BUFFER, size_in_bytes, data, usage);
+      glBufferData(buffer_type_, size_in_bytes, data, usage);
       return true;
     }
 
     bool pixel_buffer::bind(){
       if(buffer_id_ == 0) return false;
-      glBindBuffer(GL_PIXEL_PACK_BUFFER, buffer_id_);
+      glBindBuffer(buffer_type_, buffer_id_);
       return true;
     }
 
@@ -36,6 +37,7 @@ namespace ramrod {
     bool pixel_buffer::delete_buffer(){
       if(buffer_id_ == 0) return false;
       glDeleteBuffers(1, &buffer_id_);
+      buffer_id_ = 0;
       return true;
     }
 
@@ -49,13 +51,13 @@ namespace ramrod {
 
     void *pixel_buffer::map(const GLenum access){
       if(buffer_id_ == 0) return nullptr;
-      return glMapBuffer(GL_PIXEL_PACK_BUFFER, access);
+      return glMapBuffer(buffer_type_, access);
     }
 
     void *pixel_buffer::map_range(const GLintptr offset, const GLsizeiptr length,
                                   const GLenum access){
       if(buffer_id_ == 0) return nullptr;
-      return glMapBufferRange(GL_PIXEL_PACK_BUFFER, offset, length, access);
+      return glMapBufferRange(buffer_type_, offset, length, access);
     }
 
     void pixel_buffer::read_buffer(const GLenum mode){
@@ -71,11 +73,11 @@ namespace ramrod {
     }
 
     void pixel_buffer::release(){
-      glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
+      glBindBuffer(buffer_type_, 0);
     }
 
     bool pixel_buffer::unmap(){
-      return glUnmapBuffer(GL_PIXEL_PACK_BUFFER) == GL_TRUE;
+      return glUnmapBuffer(buffer_type_) == GL_TRUE;
     }
   } // namespace: gl
 } // namespace: ramrod
