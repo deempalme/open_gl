@@ -11,29 +11,43 @@ namespace ramrod {
     public:
       render_buffer(const bool create = false);
       ~render_buffer();
-
-      // Attaching the render_buffer to the bound FrameBuffer.
-      // Returns false if render_buffer has not yet been created
+      /**
+       * @brief Attaching the render_buffer to the bound FrameBuffer.
+       * @return  false if render_buffer has not yet been created
+       */
       void attach_render_to_framebuffer(const GLenum internal_format = GL_DEPTH_STENCIL_ATTACHMENT);
-
-      // Activate this render_buffer, returns false if not created yet
+      /**
+       * @brief Activate this render_buffer, returns false if not created yet
+       */
       void bind();
-
+      /**
+       * @brief Deletes this render buffer
+       * @return false if render was not generated
+       */
       bool delete_buffer();
-
+      /**
+       * @brief Generates a new render buffer
+       * @return false if error when creating render buffer or if already existed
+       */
       bool generate();
-
-      // returns the render buffer id
+      /**
+       * @brief Returns the render buffer id
+       * @return The render's buffer id
+       */
       GLuint id();
-
-      // returns true if the Frame buffer was properly created
+      /**
+       * @brief Checking if the render buffer exist
+       * @return true if the render buffer was properly created
+       */
       bool is_created();
-
-      // Releases the actual render_buffer
+      /**
+       * @brief Releases the actual render_buffer
+       */
       void release();
-
-      // Establish data storage, format and dimensions of a render_buffer object's image.
-      // Returns false if render_buffer has not yet been created
+      /**
+       * @brief Establish data storage, format and dimensions of a render_buffer object's image.
+       * @return false if render_buffer has not yet been created
+       */
       bool storage(const GLsizei width, const GLsizei height,
                    const GLenum format = GL_DEPTH24_STENCIL8);
 

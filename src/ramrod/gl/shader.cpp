@@ -27,7 +27,7 @@ namespace ramrod {
         glDeleteProgram(id_);
     }
 
-    GLint shader::attribute_location(const std::string &name){
+    GLint shader::attribute_location(const std::string &name) const{
       return glGetAttribLocation(id_, name.c_str());
     }
 
@@ -190,15 +190,15 @@ namespace ramrod {
       return true;
     }
 
-    bool shader::error(){
+    bool shader::error() const{
       return error_;
     }
 
-    const std::string &shader::error_log(){
+    const std::string &shader::error_log() const{
       return error_log_;
     }
 
-    GLuint shader::id(){
+    GLuint shader::id() const{
       return id_;
     }
 
@@ -208,115 +208,183 @@ namespace ramrod {
       return create(vertex_path, fragment_path, geometry_path);
     }
 
-    GLint shader::uniform_location(const std::string &name){
+    void shader::release() const {
+      glUseProgram(0);
+    }
+
+    GLint shader::uniform_block_binding(const std::string &uniform_name) const {
+      GLint binding = -1;
+      glGetActiveUniformBlockiv(id_, uniform_block_index(uniform_name),
+                                GL_UNIFORM_BLOCK_BINDING, &binding);
+      return binding;
+    }
+
+    GLint shader::uniform_block_binding(const GLuint uniform_index) const {
+      GLint binding = -1;
+      glGetActiveUniformBlockiv(id_, uniform_index, GL_UNIFORM_BLOCK_BINDING, &binding);
+      return binding;
+    }
+
+    GLuint shader::uniform_block_index(const std::string &uniform_name) const {
+      return glGetUniformBlockIndex(id_, uniform_name.c_str());
+    }
+
+    GLint shader::uniform_block_data_size(const std::string &uniform_name) const {
+      GLint size = -1;
+      glGetActiveUniformBlockiv(id_, uniform_block_index(uniform_name),
+                                GL_UNIFORM_BLOCK_DATA_SIZE, &size);
+      return size;
+    }
+
+    GLint shader::uniform_block_data_size(const GLuint uniform_index) const {
+      GLint size = -1;
+      glGetActiveUniformBlockiv(id_, uniform_index, GL_UNIFORM_BLOCK_DATA_SIZE, &size);
+      return size;
+    }
+
+    GLint shader::uniform_location(const std::string &name) const{
       return glGetUniformLocation(id_, name.c_str());
     }
 
-    void shader::use(){
+    void shader::use() const{
       glUseProgram(id_);
     }
 
     // :::::::::::::::::::::::::::::::: Utility uniform functions :::::::::::::::::::::::::::::::
 
-    void shader::set_value(const GLint uniform_location, const bool value){
+    void shader::set_value(const GLint uniform_location, const bool value) const {
       glUniform1i(uniform_location, static_cast<int>(value));
     }
 
-    void shader::set_value(const GLint uniform_location, const int value){
+    void shader::set_value(const GLint uniform_location, const int value) const {
       glUniform1i(uniform_location, value);
     }
 
-    void shader::set_value(const GLint uniform_location, const GLuint value){
+    void shader::set_value(const GLint uniform_location, const GLuint value) const {
       glUniform1ui(uniform_location, value);
     }
 
-    void shader::set_value(const GLint uniform_location, const float value){
+    void shader::set_value(const GLint uniform_location, const float value) const {
       glUniform1f(uniform_location, value);
     }
 
-    void shader::set_value(const GLint uniform_location, const float x, const float y){
+    void shader::set_value(const GLint uniform_location, const float *value, const int size) const {
+      switch(size){
+        case 1:
+          glUniform1fv(uniform_location, 1, value);
+        break;
+        case 2:
+          glUniform2fv(uniform_location, 1, value);
+        break;
+        case 3:
+          glUniform3fv(uniform_location, 1, value);
+        break;
+        case 4:
+          glUniform4fv(uniform_location, 1, value);
+        break;
+      }
+    }
+
+    void shader::set_value(const GLint uniform_location, const float x, const float y) const {
       glUniform2f(uniform_location, x, y);
     }
 
     void shader::set_value(const GLint uniform_location,
-                           const float x, const float y, const float z){
+                           const float x, const float y, const float z) const {
       glUniform3f(uniform_location, x, y, z);
     }
 
     void shader::set_value(const GLint uniform_location,
-                           const float x, const float y, const float z, const float w){
+                           const float x, const float y, const float z, const float w) const {
       glUniform4f(uniform_location, x, y, z, w);
     }
 
     // :::::::::::::::::::::: Utility uniform functions using uniform names :::::::::::::::::::::
 
-    void shader::set_value(const std::string &uniform_name, const bool value){
+    void shader::set_value(const std::string &uniform_name, const bool value) const {
       glUniform1i(glGetUniformLocation(id_, uniform_name.c_str()), static_cast<int>(value));
     }
 
-    void shader::set_value(const std::string &uniform_name, const int value){
+    void shader::set_value(const std::string &uniform_name, const int value) const {
       glUniform1i(glGetUniformLocation(id_, uniform_name.c_str()), value);
     }
 
-    void shader::set_value(const std::string &uniform_name, const GLuint value){
+    void shader::set_value(const std::string &uniform_name, const GLuint value) const {
       glUniform1ui(glGetUniformLocation(id_, uniform_name.c_str()), value);
     }
 
-    void shader::set_value(const std::string &uniform_name, const float value){
+    void shader::set_value(const std::string &uniform_name, const float value) const {
       glUniform1f(glGetUniformLocation(id_, uniform_name.c_str()), value);
     }
 
+    void shader::set_value(const std::string &uniform_name, const float *value, const int size) const {
+      switch(size){
+        case 1:
+          glUniform1fv(glGetUniformLocation(id_, uniform_name.c_str()), 1, value);
+        break;
+        case 2:
+          glUniform2fv(glGetUniformLocation(id_, uniform_name.c_str()), 1, value);
+        break;
+        case 3:
+          glUniform3fv(glGetUniformLocation(id_, uniform_name.c_str()), 1, value);
+        break;
+        case 4:
+          glUniform4fv(glGetUniformLocation(id_, uniform_name.c_str()), 1, value);
+        break;
+      }
+    }
+
     void shader::set_value(const std::string &uniform_name,
-                           const float x, const float y){
+                           const float x, const float y) const {
       glUniform2f(glGetUniformLocation(id_, uniform_name.c_str()), x, y);
     }
 
     void shader::set_value(const std::string &uniform_name,
-                           const float x, const float y, const float z){
+                           const float x, const float y, const float z) const {
       glUniform3f(glGetUniformLocation(id_, uniform_name.c_str()), x, y, z);
     }
 
     void shader::set_value(const std::string &uniform_name,
-                           const float x, const float y, const float z, const float w){
+                           const float x, const float y, const float z, const float w) const {
       glUniform4f(glGetUniformLocation(id_, uniform_name.c_str()), x, y, z, w);
     }
 
     // ::::::::::::::::::::: Utility uniform functions using algebraica lib :::::::::::::::::::::
 
 #ifdef USING_ALGEBRAICA
-    void shader::set_value(const std::string &uniform_name, const algebraica::vec2f &vector){
+    void shader::set_value(const std::string &uniform_name, const algebraica::vec2f &vector) const {
       glUniform2fv(glGetUniformLocation(id_, uniform_name.c_str()), 1, vector.data());
     }
 
-    void shader::set_value(const std::string &uniform_name, const algebraica::vec3f &vector){
+    void shader::set_value(const std::string &uniform_name, const algebraica::vec3f &vector) const {
       glUniform3fv(glGetUniformLocation(id_, uniform_name.c_str()), 1, vector.data());
     }
 
     void shader::set_values(const std::string &uniform_name,
                             const algebraica::vec3f *pointer_to_vector_array,
-                            const GLsizei vector_array_size){
+                            const GLsizei vector_array_size) const {
       glUniform3fv(glGetUniformLocation(id_, uniform_name.c_str()),
                    vector_array_size, pointer_to_vector_array->data());
     }
 
-    void shader::set_value(const std::string &uniform_name, const algebraica::vec4f &vector){
+    void shader::set_value(const std::string &uniform_name, const algebraica::vec4f &vector) const {
       glUniform4fv(glGetUniformLocation(id_, uniform_name.c_str()), 1, vector.data());
     }
 
     void shader::set_value(const std::string &uniform_name,
-                           const algebraica::quaternionF &quaternion){
+                           const algebraica::quaternionF &quaternion) const {
       glUniform4fv(glGetUniformLocation(id_, uniform_name.c_str()), 1, quaternion.data());
     }
 
-    void shader::set_value(const std::string &uniform_name, const algebraica::mat3f &matrix){
+    void shader::set_value(const std::string &uniform_name, const algebraica::mat3f &matrix) const {
       glUniformMatrix3fv(glGetUniformLocation(id_, uniform_name.c_str()),
                          1, GL_FALSE, matrix.data());
     }
 
-    void shader::set_value(const std::string &uniform_name, const algebraica::mat4f &matrix){
+    void shader::set_value(const std::string &uniform_name, const algebraica::mat4f &matrix) const {
       glUniformMatrix4fv(glGetUniformLocation(id_, uniform_name.c_str()), 1,
                          GL_FALSE, matrix.data());
     }
 #endif
-  } // namespace gl
-} // namespace ramrod
+  } // namespace: gl
+} // namespace: ramrod
