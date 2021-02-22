@@ -386,5 +386,5 @@ namespace ramrod {
                          GL_FALSE, matrix.data());
     }
 #endif
-  } // namespace gl
-} // namespace ramrod
+  } // namespace: gl
+} // namespace: ramrod
