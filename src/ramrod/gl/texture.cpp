@@ -110,6 +110,32 @@ namespace ramrod{
       return true;
     }
 
+    GLuint texture::id(){
+      return id_;
+    }
+
+    void texture::internal_format(const GLint new_internal_format){
+      internal_format_ = new_internal_format;
+    }
+
+    GLfloat texture::max_anisotropic_filtering(){
+      if(custom_filtering_) return max_filtering_;
+      return global_max_filtering_;
+    }
+
+    void texture::max_anisotropic_filtering(const GLfloat new_max_filtering){
+      max_filtering_ = new_max_filtering;
+      custom_filtering_ = true;
+    }
+
+    bool texture::mipmap(){
+      return has_mipmap_;
+    }
+
+    void texture::mipmap(const bool generate_mipmap){
+      has_mipmap_ = generate_mipmap;
+    }
+
     bool texture::parameter(const GLint wrap_s, const GLint wrap_t,
                             const GLint min_filter, const GLint mag_filter){
       if(id_ == 0) return false;
@@ -154,32 +180,6 @@ namespace ramrod{
       if(id_ == 0) return false;
       glPixelStorei(name, param);
       return true;
-    }
-
-    GLuint texture::id(){
-      return id_;
-    }
-
-    void texture::internal_format(const GLint new_internal_format){
-      internal_format_ = new_internal_format;
-    }
-
-    GLfloat texture::max_anisotropic_filtering(){
-      if(custom_filtering_) return max_filtering_;
-      return global_max_filtering_;
-    }
-
-    void texture::max_anisotropic_filtering(const GLfloat new_max_filtering){
-      max_filtering_ = new_max_filtering;
-      custom_filtering_ = true;
-    }
-
-    bool texture::mipmap(){
-      return has_mipmap_;
-    }
-
-    void texture::mipmap(const bool generate_mipmap){
-      has_mipmap_ = generate_mipmap;
     }
 
     void texture::release(){
